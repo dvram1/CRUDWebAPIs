@@ -1,0 +1,6 @@
+C:\Projects\Dan-ASP.NET with Mongodb\BinaryString\BinaryString\bin\Debug\BinaryString.exe.config
+C:\Projects\Dan-ASP.NET with Mongodb\BinaryString\BinaryString\bin\Debug\BinaryString.exe
+C:\Projects\Dan-ASP.NET with Mongodb\BinaryString\BinaryString\bin\Debug\BinaryString.pdb
+C:\Projects\Dan-ASP.NET with Mongodb\BinaryString\BinaryString\obj\Debug\BinaryString.csproj.CoreCompileInputs.cache
+C:\Projects\Dan-ASP.NET with Mongodb\BinaryString\BinaryString\obj\Debug\BinaryString.exe
+C:\Projects\Dan-ASP.NET with Mongodb\BinaryString\BinaryString\obj\Debug\BinaryString.pdb
