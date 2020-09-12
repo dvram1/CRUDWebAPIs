@@ -12,9 +12,9 @@ namespace ProjectCRUD.Controllers
     {
         private readonly IStudentService _studentService;
 
-        public StudentsController()
+        public StudentsController(IStudentService studentSvc)
         {
-            _studentService = new StudentService();
+            _studentService = studentSvc;
         }
 
         //GET -  returns a student document given a studentID
@@ -23,7 +23,10 @@ namespace ProjectCRUD.Controllers
         {
             try
             {
-                var student = _studentService.Get(id);
+                string message = null;
+                var student = _studentService.Get(id,out message);
+                if(message!=null) //if validation errors on id, return error
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
                 if (student != null)
                     return Request.CreateResponse(HttpStatusCode.OK, student, Configuration.Formatters.JsonFormatter);
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Student not found with given id");
@@ -45,7 +48,7 @@ namespace ProjectCRUD.Controllers
                 var students = _studentService.GetAll();
                 if (students.Any())
                     return Request.CreateResponse(HttpStatusCode.OK, students, Configuration.Formatters.JsonFormatter);
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No students found.");
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No students found");
             }
             catch (Exception ex)
             {
@@ -63,7 +66,7 @@ namespace ProjectCRUD.Controllers
                 var deptsInfo = _studentService.GetDeptWiseCount();
                 if (deptsInfo.Any())
                     return Request.CreateResponse(HttpStatusCode.OK, deptsInfo, Configuration.Formatters.JsonFormatter);
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No Departent Info found.");
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No Department Info found");
             }
             catch (Exception ex)
             {
@@ -78,19 +81,11 @@ namespace ProjectCRUD.Controllers
         {
             try
             {
-                if (student != null)
-                {
-                    var s = _studentService.Get(student.studentID);
-                    if (s == null) // This student does not exist in the collection and hence we can add to collection
-                        _studentService.Create(student);
-                    else
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "student already exists");
-
-                }
+                string message= null;
+                if(_studentService.Create(student, out message))
+                    return Request.CreateResponse(HttpStatusCode.Created, student, Configuration.Formatters.JsonFormatter);
                 else
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "student parameter is null.");
-
-                return Request.CreateResponse(HttpStatusCode.Created, student, Configuration.Formatters.JsonFormatter);
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
             }
             catch (Exception ex)
             {
@@ -105,15 +100,11 @@ namespace ProjectCRUD.Controllers
         {
             try
             {
-                var s = _studentService.Get(id);
-
-                if (s == null)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Student not found to Delete ");
-                }
-                _studentService.Delete(id);
-
-                return Request.CreateResponse(HttpStatusCode.OK);
+                string message = null;
+                if (_studentService.Delete(id, out message))
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
             }
             catch (Exception ex)
             {
@@ -129,14 +120,11 @@ namespace ProjectCRUD.Controllers
         {
             try
             {
-                 var s = _studentService.Get(student.studentID);
-                if (s == null)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Student not found to update ");
-                }
-                _studentService.Update(student);
-
-                return Request.CreateResponse(HttpStatusCode.OK);
+                string message = null;
+                if (_studentService.Update(student, out message))
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
             }
             catch (Exception ex)
             {

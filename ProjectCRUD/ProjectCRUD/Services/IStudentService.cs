@@ -7,11 +7,12 @@ namespace ProjectCRUD.Services
 {
     public interface IStudentService
     {
-        void Create(Student student);
+        bool Create(Student student, out string message);
+        Student Get(string id, out string message);
         Student Get(string id);
         List<Student> GetAll();
         IEnumerable<object> GetDeptWiseCount();
-        void Delete(string id);
-        void Update(Student student);
+        bool Delete(string id, out string message);
+        bool Update(Student student, out string message);
     }
 }
